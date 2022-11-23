@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming-server
+  labels:
+    app: streaming-server
+spec:
+  selector:
+    app: streaming-server
+  ports:
+    - name: ext-rtmp-port
+      port: 1935
+      targetPort: 1935
+    - name: ext-http-port
+      port: 8080
+      targetPort: 8080
+    - name: ext-http-port-alt
+      port: 8443
+      targetPort: 8443
+  type: LoadBalancer
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming-server
+  labels:
+    app: streaming-server
+spec:
+  replicas: 1
+  selector:   
+    matchLabels:   
+      app: streaming-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: streaming-server
+    spec:
+      containers:
+      - name: streaming-server
+        image: codeworksio/streaming-server
+        ports:
+        - containerPort: 1935
+        - containerPort: 8080
+        - containerPort: 8443
+        volumeMounts:
+        - mountPath: "/var/lib/streaming"
+          name: streaming-server-storage
+      volumes:
+      - name: streaming-server-storage
+        persistentVolumeClaim:
+          claimName: streaming-server-claim
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: streaming-server-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mounts/var/lib/streaming"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: streaming-server-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming-server
+  labels:
+    app: streaming-server
+spec:
+  selector:
+    app: streaming-server
+  ports:
+    - port: 1935
+      targetPort: 1935
+    - port: 8080
+      targetPort: 8080
+    - port: 8443
+      targetPort: 8443 
+  type: LoadBalancer

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  creationTimestamp: null
+  labels:
+    type: local
+  name: streaming-server-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "././mounts/var/lib/streaming"

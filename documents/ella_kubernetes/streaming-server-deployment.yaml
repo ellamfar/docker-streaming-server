@@ -15,6 +15,10 @@ spec:
       io.kompose.service: streaming-server
   strategy:
     type: Recreate
+  # volumes:
+  #   - name: streaming-server-storage
+  #     persistentVolumeClaim:
+  #         claimName:
   template:
     metadata:
       annotations:
