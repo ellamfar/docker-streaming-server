@@ -68,7 +68,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mounts/var/lib/streaming"
+    path: "/docker-streaming-server/mounts/var/lib/streaming"
 
 ---
 

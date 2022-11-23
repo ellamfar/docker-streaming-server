@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming-consumer
+  labels:
+    app: streaming-consumer
+spec:
+  selector:
+    app: streaming-consumer
+  ports:
+    - name: http-web-page
+      port: 9999
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming-consumer
+  labels:
+    app: streaming-consumer
+spec:
+  replicas: 1
+  selector:   
+    matchLabels:   
+      app: streaming-consumer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: streaming-consumer
+    spec:
+      containers:
+      - name: streaming-consumer
+        image: codeworksio/nginx
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: "/var/www"
+          name: streaming-consumer-storage
+      volumes:
+      - name: streaming-consumer-storage
+        persistentVolumeClaim:
+          claimName: streaming-consumer-claim
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: streaming-consumer-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadOnlyMany
+  hostPath:
+    path: "/docker-streaming-server/documents/examples"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: streaming-consumer-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 3Gi

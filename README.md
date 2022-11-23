@@ -1,3 +1,42 @@
+# Kubernetes Test
+
+## Requirements
+
+* 
+### 1. Clone the repository
+
+Clone github repository and enter it.
+
+```bash
+git clone https://github.com/ellamfar/docker-streaming-server.git
+cd docker-streaming-server
+```
+
+### 2. 
+Start off by creating a minikube cluster.
+
+```bash
+cd docker-streaming-server
+minikube start --mount --mount-string "$(pwd):/docker-streaming-server/"
+```
+
+```bash
+minikube ssh
+df -hl
+```
+
+```bash
+kubectl apply -f deployment-server.yaml 
+kubectl apply -f deployment-consumer.yaml
+```
+
+```bash
+minikube tunnel
+```
+
+
+----------------------------------------------------------
+
 [![Circle CI](https://circleci.com/gh/codeworksio/docker-streaming-server.svg?style=shield "CircleCI")](https://circleci.com/gh/codeworksio/docker-streaming-server)&nbsp;[![Size](https://images.microbadger.com/badges/image/codeworksio/streaming-server.svg)](http://microbadger.com/images/codeworksio/streaming-server)&nbsp;[![Version](https://images.microbadger.com/badges/version/codeworksio/streaming-server.svg)](http://microbadger.com/images/codeworksio/streaming-server)&nbsp;[![Commit](https://images.microbadger.com/badges/commit/codeworksio/streaming-server.svg)](http://microbadger.com/images/codeworksio/streaming-server)&nbsp;[![Docker Hub](https://img.shields.io/docker/pulls/codeworksio/streaming-server.svg)](https://hub.docker.com/r/codeworksio/streaming-server/)
 
 Docker Streaming Server
